@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,13 @@ public class JsoupParser {
         Document doc = getPage(xmlItemUrl);
         if (doc!=null){
             Element upperEl = doc.getElementsByAttributeValue("class", "product-detail-section-part-title").first();
-            title = upperEl.text();
+           try{
+               title = upperEl.text();
+           }
+           catch (NullPointerException e){
+               System.out.println(xmlItemUrl);
+               return "";
+           }
             return title;
         }
         else {
@@ -45,12 +52,15 @@ public class JsoupParser {
     }
 
     private Document getPage(String xmlItemUrl) {
-        try {
-            return Jsoup.connect(xmlItemUrl).timeout(20 * 1000).userAgent("Mozilla/5.0").get();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Document doc = null;
+        while (true){
+            try {
+                doc = Jsoup.connect(xmlItemUrl).timeout(20 * 1000).userAgent("Mozilla/5.0").get();
+                break;
+            } catch (IOException ignored){
+            }
         }
-        return null;
+        return doc;
     }
 
     private void setProxies() {
