@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -80,6 +81,43 @@ public class SileniumUtil {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException ignored) {
+        }
+    }
+
+    public static void openItemUrl(WebDriver driver, String url) throws IOException {
+        logger.info("Opening item " + url);
+        String currentUrl = driver.getCurrentUrl();
+        String title = "";
+        if (currentUrl.contains("product-detail")){
+            title = driver.findElement(By.cssSelector("h1[class='product-detail-section-part-title']")).getText();
+        }
+        driver.get(url);
+        int attempts = 0;
+        while (true){
+            try {
+                WebElement titleEl = driver.findElement(By.cssSelector("h2[class='product-detail-element product-detail-title']"));
+                if (!titleEl.getText().equals(title)){
+                    logger.info("Opened item " + url);
+                    break;
+                }
+            }
+            catch (NoSuchElementException e){
+                attempts++;
+                if (attempts==100){
+                    if (!hasConnection()){
+                        attempts = 0;
+                    }
+                    else if (driver.getCurrentUrl().equals(SUPERLIFT_URL)) {
+                        logger.error("couldn't open url " + url);
+                        throw new NotFoundException();
+                    }
+                    else{
+                        logger.error("couldn't open url " + url);
+                        throw new IOException();
+                    }
+                }
+                SileniumUtil.sleepForTimeout(100);
+            }
         }
     }
 }

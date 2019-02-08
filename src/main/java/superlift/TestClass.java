@@ -1,11 +1,10 @@
 package superlift;
 
-import superlift.checkers.JsoupParser;
 import org.openqa.selenium.WebDriver;
+import superlift.checkers.JsoupParser;
 import superlift.entities.Title;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestClass {
 
@@ -22,7 +21,10 @@ public class TestClass {
 
     public static void testItemBuild(){
         WebDriver driver = SileniumUtil.initDriver();
-        driver.get("https://superlift.com/superide-shock-absorber-12-42-extended-8-22-collapsed");
+        driver.get("https://superlift.com/product-detail/k897");
+       // driver.get("https://superlift.com/product-detail/K931");
+       // driver.get("https://superlift.com/product-detail/4310");
+       // driver.get("https://superlift.com/product-detail/95030");
         SileniumUtil.sleepForTimeout(10000);
         ItemBuilder.buildItem(driver);
         driver.close();
@@ -30,6 +32,14 @@ public class TestClass {
 
     public static void testItemTitles(){
         List<String> itemUrls = new JsoupParser().getXmlItemUrls();
+        List<String> dbItemUrls = SuperliftDAO.getUrlsToReparse();
+        itemUrls.removeAll(dbItemUrls);
+        itemUrls.remove("https://superlift.com/product-detail/2114");
+        itemUrls.remove("https://superlift.com/product-detail/K274");
+        itemUrls.remove("https://superlift.com/product-detail/K274B");
+        itemUrls.remove("https://superlift.com/product-detail/4600");
+        itemUrls.remove("https://superlift.com/product-detail/4040");
+        itemUrls.remove("https://superlift.com/product-detail/85231");
         int total = itemUrls.size();
         final Integer[] current = {0};
         itemUrls.forEach(url->{
@@ -44,5 +54,121 @@ public class TestClass {
         });
         SileniumUtil.sleepForTimeout(15000);
         HibernateUtil.shutdown();
+    }
+
+    public static void testCategoryFromTitle(){
+        List<Title> titles = SuperliftDAO.getAllTitles();
+        titles.forEach(title->{
+            String titleStr = title.getTitle();
+            if (titleStr.contains("Shock Absorber")){
+                title.setCategory("Shocks");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("U-Bolt")){
+                title.setCategory("U-Bolts");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Fender Flares")){
+                title.setCategory("Fender Flares");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Brake Hose")||titleStr.contains("Brakes Hose")){
+                title.setCategory("Brake Lines");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Rear Block Kit")){
+                title.setCategory("Rear Lifts");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Sway Bar")){
+                title.setCategory("Sway bar");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Bushing")){
+                title.setCategory("Bushings");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Pitman Arm")){
+                title.setCategory("Pitman Arms");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Leveling Kit")){
+                title.setCategory("Front lifts and coilovers");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Steering Stabilizer")){
+                title.setCategory("Steering stabilizers");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Driveshaft")||titleStr.contains("Drive shaft")||titleStr.contains("Drive Shaft")){
+                title.setCategory("Driveshaft");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Rear Block")){
+                title.setCategory("Rear Lifts");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.startsWith("Rear Add-a-Leafs")){
+                title.setCategory("Rear Lifts");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.startsWith("Front Add-a-Leafs")){
+                title.setCategory("Front lifts and coilovers");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Bearing Drop Kit")){
+                title.setCategory("Carrier bearing drop kits");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.startsWith("Radius Arms")){
+                title.setCategory("Control Arms");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Lift Kit")){
+                title.setCategory("Lift Kits");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Track Bar")){
+                title.setCategory("Track Bar");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Ctrl Arm")){
+                title.setCategory("Control Arms");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Shock Boots")){
+                title.setCategory("Shock Boots");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Steering")){
+                title.setCategory("Steering parts");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("King")){
+                title.setCategory("Shocks");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Link Kit")){
+                title.setCategory("Lift Kits");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else if (titleStr.contains("Shock")){
+                title.setCategory("Shocks");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+            else {
+                title.setCategory("Other");
+                SuperliftDAO.updateTitleCategory(title);
+            }
+        });
+        System.out.println("finished");
+    }
+
+    public static void testWrongLinkDr(){
+        WebDriver driver = SileniumUtil.initDriver();
+        driver.get("https://superlift.com/product-detail/4040");
+        SileniumUtil.sleepForTimeout(10000);
+        System.out.println(driver.getCurrentUrl());
+        driver.quit();
     }
 }

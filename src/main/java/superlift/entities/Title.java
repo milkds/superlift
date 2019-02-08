@@ -17,12 +17,16 @@ public class Title {
     @Column (name = "URL")
     private String itemUrl;
 
+    @Column (name = "CATEGORY")
+    private String category;
+
 
     @Override
     public String toString() {
         return "Title{" +
                 "title='" + title + '\'' +
                 ", itemUrl='" + itemUrl + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 
@@ -48,5 +52,13 @@ public class Title {
 
     public void setItemUrl(String itemUrl) {
         this.itemUrl = itemUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

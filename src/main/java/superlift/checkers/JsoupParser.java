@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,20 +30,21 @@ public class JsoupParser {
     }
 
     public String getItemLongTitle(String xmlItemUrl){
+        System.out.println("getting "+xmlItemUrl);
         setProxies();
-
         String title = "";
         Document doc = getPage(xmlItemUrl);
         if (doc!=null){
-            Element upperEl = doc.getElementsByAttributeValue("class", "product-detail-section-part-title").first();
-           try{
-               title = upperEl.text();
-           }
-           catch (NullPointerException e){
-               System.out.println(xmlItemUrl);
-               return "";
-           }
-            return title;
+            while (true){
+                Element upperEl = doc.getElementsByAttributeValue("class", "product-detail-section-part-title").first();
+                if (upperEl!=null){
+                    title = upperEl.text();
+                    return title;
+                }
+                else {
+                    doc = getPage(xmlItemUrl);
+                }
+            }
         }
         else {
             return "";
