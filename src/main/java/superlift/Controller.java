@@ -16,6 +16,7 @@ public class Controller {
         new Controller().checkSite();
       //  TestClass.testItemTitles();
       //  TestClass.testCategoryFromTitle();
+
     }
 
     public void checkSite(){
