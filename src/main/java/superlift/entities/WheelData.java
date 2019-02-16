@@ -21,16 +21,36 @@ public class WheelData {
     @Column(name = "ITEM_SKU")
     private String itemSku;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "wheelData")
-    private List<WheelDataPair> infoPairs = new ArrayList<>();
+    @Column(name = "TIRE")
+    private String tire;
+
+    @Column(name = "WHEEL")
+    private String wheel;
+
+    @Column(name = "BACKSPACING")
+    private String backspacing;
+
+    @Column(name = "OFFSET")
+    private String offset;
+
+    @Column(name = "BACKSPRING")
+    private String backspring;
+
+    @Column(name = "BACKSPACING_INCH")
+    private String backspacingInch;
+
+    @Column(name = "OFFSET_MM")
+    private String offsetMM;
 
     @Override
     public String toString() {
-        return "WheelData{" +
-                "infoID=" + infoID +
-                ", itemSku='" + itemSku + '\'' +
-                ", infoPairs=" + infoPairs +
-                '}';
+        return "tire='" + tire + '\'' +
+                ", wheel='" + wheel + '\'' +
+                ", backspacing='" + backspacing + '\'' +
+                ", offset='" + offset + '\'' +
+                ", backspring='" + backspring + '\'' +
+                ", backspacingInch='" + backspacingInch + '\'' +
+                ", offsetMM='" + offsetMM + '\'';
     }
 
     public int getInfoID() {
@@ -49,13 +69,60 @@ public class WheelData {
         this.itemSku = itemSku;
     }
 
-    public List<WheelDataPair> getInfoPairs() {
-        return infoPairs;
+
+    public String getTire() {
+        return tire;
     }
 
-    public void setInfoPairs(List<WheelDataPair> infoPairs) {
-        this.infoPairs = infoPairs;
+    public void setTire(String tire) {
+        this.tire = tire;
     }
 
+    public String getWheel() {
+        return wheel;
+    }
 
+    public void setWheel(String wheel) {
+        this.wheel = wheel;
+    }
+
+    public String getBackspacing() {
+        return backspacing;
+    }
+
+    public void setBackspacing(String backspacing) {
+        this.backspacing = backspacing;
+    }
+
+    public String getOffset() {
+        return offset;
+    }
+
+    public void setOffset(String offset) {
+        this.offset = offset;
+    }
+
+    public String getBackspring() {
+        return backspring;
+    }
+
+    public void setBackspring(String backspring) {
+        this.backspring = backspring;
+    }
+
+    public String getBackspacingInch() {
+        return backspacingInch;
+    }
+
+    public void setBackspacingInch(String backspacingInch) {
+        this.backspacingInch = backspacingInch;
+    }
+
+    public String getOffsetMM() {
+        return offsetMM;
+    }
+
+    public void setOffsetMM(String offsetMM) {
+        this.offsetMM = offsetMM;
+    }
 }

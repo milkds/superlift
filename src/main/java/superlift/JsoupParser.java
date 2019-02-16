@@ -1,4 +1,4 @@
-package superlift.checkers;
+package superlift;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -6,12 +6,33 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JsoupParser {
     private static final String SUPERLIFT_URL = "http://superlift.com/";
     private static final String SITEMAP = "http://superlift.com/product_detail_pages_sitemap.xml";
+
+    public BigDecimal getNewPrice(String itemLink) {
+        setProxies();
+        String priceStr = "";
+        Document doc = getPage(itemLink);
+        Element priceKeeprEl = null;
+        try {
+            priceKeeprEl = doc.getElementsByAttributeValueStarting("id", "product-add-to-cart-form").first();
+            priceKeeprEl = priceKeeprEl.getElementsByClass("product-price").first();
+            priceStr = priceKeeprEl.ownText();
+            priceStr = priceStr.replace("$", "");
+            priceStr = priceStr.replaceAll(",", "");
+        }
+        catch (NullPointerException e){
+            return new BigDecimal(0);
+        }
+
+
+        return new BigDecimal(priceStr);
+    }
 
     public String getItemTitle(String xmlItemUrl){
         setProxies();
@@ -56,7 +77,9 @@ public class JsoupParser {
         while (true){
             try {
                 doc = Jsoup.connect(xmlItemUrl).timeout(20 * 1000).userAgent("Mozilla/5.0").get();
-                break;
+                if (doc!=null){
+                    break;
+                }
             } catch (IOException ignored){
             }
         }

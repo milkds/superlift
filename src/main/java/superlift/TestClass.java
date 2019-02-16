@@ -1,9 +1,9 @@
 package superlift;
 
 import org.openqa.selenium.WebDriver;
-import superlift.checkers.JsoupParser;
 import superlift.entities.Title;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TestClass {
@@ -170,5 +170,12 @@ public class TestClass {
         SileniumUtil.sleepForTimeout(10000);
         System.out.println(driver.getCurrentUrl());
         driver.quit();
+    }
+
+    public static void testPrice(){
+       BigDecimal decimal = new JsoupParser().getNewPrice("https://superlift.com/product-detail/k897");
+     //   BigDecimal decimal = new JsoupParser().getNewPrice("https://superlift.com/product-detail/4040");
+    //    System.out.println(decimal.toPlainString());
+        System.out.println(decimal.intValue());
     }
 }

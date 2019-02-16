@@ -2,20 +2,20 @@ package superlift;
 
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
-import superlift.checkers.JsoupParser;
 import superlift.entities.SuperLiftItem;
 
+import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
     public static void main(String[] args) {
-      //  superlift.TestClass.testDriver();
-        //TestClass.getCats();
-        new Controller().checkSite();
-      //  TestClass.testItemTitles();
-      //  TestClass.testCategoryFromTitle();
+      //TestClass.testPrice();
+        TestClass.testItemBuild();
+
 
     }
 
@@ -34,12 +34,21 @@ public class Controller {
     }
 
     private void finishCheck(Statistics statistics) {
+        statistics.prepareReport();
+        File reportFile = getReportFile(statistics);
         HibernateUtil.shutdown();
     }
 
-    private void checkPriceChanges(List<String> webItemUrls, Statistics statistics) {
-        System.out.println("Changes checked");
+    private File getReportFile(Statistics statistics) {
         //impl
+        return null;
+    }
+
+    private void checkPriceChanges(List<String> webItemUrls, Statistics statistics) {
+        Map<SuperLiftItem, BigDecimal> changedPricesMap = statistics.getChangedPricesMap();
+        webItemUrls.forEach(url->{
+            changedPricesMap.putAll(new PriceChangeChecker(url).checkPrice());
+        });
     }
 
 

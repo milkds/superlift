@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,24 +43,9 @@ public class SuperliftDAO {
                     session.persist(fit);
                 });
             }
-            String sku = item.getPartNo();
-            List<TabName> tabNames = item.getTabNames();
-            if (tabNames!=null&&tabNames.size()>0){
-                tabNames.forEach(tabName -> {
-                    tabName.setItemSKU(sku);
-                    session.persist(tabName);
-                });
-            }
             List<WheelData> wheelDatas = item.getWheelData();
             if (wheelDatas!=null&&wheelDatas.size()>0){
-                wheelDatas.forEach(wheelData -> {
-                    session.persist(wheelData);
-                    List<WheelDataPair> dataPairs = wheelData.getInfoPairs();
-                    dataPairs.forEach(dataPair->{
-                        dataPair.setWheelData(wheelData);
-                        session.persist(dataPair);
-                    });
-                });
+                wheelDatas.forEach(session::persist);
             }
 
             transaction.commit();
@@ -216,5 +202,50 @@ public class SuperliftDAO {
         item = (SuperLiftItem)q.getSingleResult();
 
         return item;
+    }
+
+    public static SuperLiftItem getItemByUrl(String url){
+        Session session = HibernateUtil.getSession();
+        SuperLiftItem result = getItemByUrl(url,session);
+        session.close();
+
+        return result;
+    }
+
+    public static void updatePriceForItem(int itemID, BigDecimal newPrice) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = null;
+        SuperLiftItem item = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            item = session.get(SuperLiftItem.class, itemID);
+            item.setPrice(newPrice);
+            session.update(item);
+            transaction.commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+
+    }
+
+    public static List<SuperLiftItem> getAllItems() {
+        Session session = HibernateUtil.getSession();
+        List<SuperLiftItem> items = new ArrayList<>();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<SuperLiftItem> crQ = builder.createQuery(SuperLiftItem.class);
+        Root<SuperLiftItem> root = crQ.from(SuperLiftItem.class);
+        crQ.where(builder.notEqual(root.get("status"), "DELETED"));
+        Query q = session.createQuery(crQ);
+        items = q.getResultList();
+        session.close();
+
+
+        return items;
+
     }
 }

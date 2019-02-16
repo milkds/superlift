@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "items")
@@ -59,11 +60,23 @@ public class SuperLiftItem {
     private List<Fitment> fits = new ArrayList<>();
 
     @Transient
-    private List<TabName> tabNames = new ArrayList<>();
-
-    @Transient
     private List<WheelData> wheelData = new ArrayList<>();
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SuperLiftItem)) return false;
+        SuperLiftItem item = (SuperLiftItem) o;
+        return itemID == item.itemID &&
+                Objects.equals(partNo, item.partNo) &&
+                Objects.equals(itemUrl, item.itemUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemID, partNo, itemUrl);
+    }
 
     @Override
     public String toString() {
@@ -188,14 +201,6 @@ public class SuperLiftItem {
 
     public void setFits(List<Fitment> fits) {
         this.fits = fits;
-    }
-
-    public List<TabName> getTabNames() {
-        return tabNames;
-    }
-
-    public void setTabNames(List<TabName> tabNames) {
-        this.tabNames = tabNames;
     }
 
     public List<WheelData> getWheelData() {

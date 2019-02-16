@@ -30,7 +30,6 @@ public class ItemBuilder {
         String notes = getNotes(driver);
         List<WheelData> wheelData = getWheelData(driver, partNo);
         String installInfo = getInstallInfo(driver);
-        List<TabName> tabNames = getTabNames(driver, partNo);
         String category = getCategory(title);
 
         item.setTitle(title);
@@ -44,13 +43,12 @@ public class ItemBuilder {
         item.setNotes(notes);
         item.setWheelData(wheelData);
         item.setInstallInfo(installInfo);
-        item.setTabNames(tabNames);
         item.setCategory(category);
         item.setItemUrl(driver.getCurrentUrl());
         item.setStatus("ACTIVE");
 
         //log section
-       /* System.out.println("title: " + title);
+        System.out.println("title: " + title);
         System.out.println("What is this: " + wtf);
         System.out.println("What does it include: "+ include);
         System.out.println("Part No: " + partNo);
@@ -61,8 +59,7 @@ public class ItemBuilder {
         System.out.println("Notes: " + notes);
         wheelData.forEach(System.out::println);
         System.out.println("Installation info: " + installInfo);
-        tabNames.forEach(System.out::println);
-        System.out.println("Category: " + category);*/
+        System.out.println("Category: " + category);
 
 
         return item;
@@ -146,30 +143,6 @@ public class ItemBuilder {
         }
     }
 
-    private static List<TabName> getTabNames(WebDriver driver, String partNo) {
-        List<TabName> names = new ArrayList<>();
-        WebElement tabListEL = null;
-        List<WebElement> tabEls = null;
-        try {
-            tabListEL = driver.findElement(By.cssSelector("ul[class='nav nav-tabs']"));
-            tabEls = tabListEL.findElements(By.cssSelector("li[role='presentation']"));
-        }
-        catch (NoSuchElementException e){
-            logger.error("NO INFO TABS AVAILABLE AT ITEM " + partNo);
-            return names;
-        }
-
-        if (tabEls.size()>0){
-         tabEls.forEach(tabEl->{
-             TabName name = new TabName();
-             name.setItemSKU(partNo);
-             name.setTabName(tabEl.getText());
-             names.add(name);
-         });
-        }
-
-        return names;
-    }
 
     private static String getInstallInfo(WebDriver driver) {
         WebElement tabEl = null;
@@ -250,31 +223,63 @@ public class ItemBuilder {
        }
 
        //getting column names
-       List<String> columnNames = new ArrayList<>();
        WebElement titleEl = rowEls.get(0);
        List<WebElement> colNameEls = titleEl.findElements(By.tagName("td"));
-       colNameEls.forEach(colNameEl->{
-           columnNames.add(colNameEl.getText());
-       });
 
        //iterating table
         List<WheelData> result = new ArrayList<>();
-        for (int i = 1; i < rowEls.size(); i++) {
-            //initiating
+        for (int i = 1; i < rowEls.size(); i++){
             WheelData data = new WheelData();
-            List<WheelDataPair> pairs = data.getInfoPairs();
             data.setItemSku(partNo);
-            WebElement rowEl = rowEls.get(i);
-            //iterating column values
-            List<WebElement>colValues = rowEl.findElements(By.tagName("td"));
-            for (int j = 0; j < colValues.size(); j++) {
-                WheelDataPair pair = new WheelDataPair();
-                pair.setName(columnNames.get(j));
-                pair.setValue(colValues.get(j).getText());
-                pairs.add(pair);
-            }
-
             result.add(data);
+        }
+        for (int i = 0; i < colNameEls.size() ; i++) {
+            String name = colNameEls.get(i).getText();
+            switch (name){
+                case "Tire":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setTire(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                case "Wheel":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setWheel(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                case "Backspacing":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setBackspacing(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                case "Offset":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setOffset(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                case "Backspring":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setBackspring(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                case "Backspacing (INCH)":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setBackspacingInch(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                case "Offset (MM)":{
+                    for (int j = 1; j < rowEls.size(); j++){
+                        result.get(j-1).setOffsetMM(rowEls.get(j).findElements(By.tagName("td")).get(i).getText());
+                    }
+                    break;
+                }
+                default: logger.error("Unexpected field in wheel info at " + driver.getCurrentUrl());
+            }
         }
 
         return result;
@@ -360,7 +365,6 @@ public class ItemBuilder {
 
         return result;
     }
-
 
     private static String getImgLinks(WebDriver driver) {
         StringBuilder linkBuilder = new StringBuilder();
