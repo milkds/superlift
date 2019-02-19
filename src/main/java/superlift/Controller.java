@@ -14,8 +14,8 @@ public class Controller {
 
     public static void main(String[] args) {
       //TestClass.testPrice();
-        TestClass.testItemBuild();
-
+       // TestClass.testItemBuild();
+        new Controller().checkSite();
 
     }
 
@@ -70,7 +70,8 @@ public class Controller {
                     //that's for case when item is present in sitemap, but actually it doesn't open.
                     SuperLiftItem item = new SuperLiftItem();
                     item.setItemUrl(url);
-                    item.setStatus("NOT AVAILABLE");
+                    item.setStatus("DELETED");
+                    SuperliftDAO.saveItem(item);
                     continue;
                 }
                 catch (IOException e){

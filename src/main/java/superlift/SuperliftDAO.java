@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import superlift.entities.*;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -199,7 +200,16 @@ public class SuperliftDAO {
         Root<SuperLiftItem> root = crQ.from(SuperLiftItem.class);
         crQ.where(builder.equal(root.get("itemUrl"), url));
         Query q = session.createQuery(crQ);
-        item = (SuperLiftItem)q.getSingleResult();
+
+       try{
+           item = (SuperLiftItem)q.getSingleResult();
+       }
+       catch (NoResultException e){
+           logger.error("No item for url" + url);
+           session.close();
+           HibernateUtil.shutdown();
+           System.exit(1);
+       }
 
         return item;
     }

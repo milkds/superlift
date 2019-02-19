@@ -14,7 +14,7 @@ import java.net.URLConnection;
 
 public class SileniumUtil {
 
-    private static final String SUPERLIFT_URL = "http://superlift.com";
+    private static final String SUPERLIFT_URL = "https://superlift.com/";
     private static final Logger logger = LogManager.getLogger(SileniumUtil.class.getName());
 
     public static WebDriver initDriver(){
@@ -65,6 +65,10 @@ public class SileniumUtil {
         return result;
     }
     public static boolean hasConnection(){
+        System.setProperty("http.proxyHost", "24.225.1.149");
+        System.setProperty("http.proxyPort", "8080");
+        System.setProperty("https.proxyHost", "24.225.1.149");
+        System.setProperty("https.proxyPort", "8080");
         URL url= null;
         try {
             url = new URL(SUPERLIFT_URL);
@@ -103,7 +107,7 @@ public class SileniumUtil {
             }
             catch (NoSuchElementException e){
                 attempts++;
-                if (attempts==100){
+                if (attempts==600){
                     if (!hasConnection()){
                         attempts = 0;
                     }
@@ -112,7 +116,7 @@ public class SileniumUtil {
                         throw new NotFoundException();
                     }
                     else{
-                        logger.error("couldn't open url " + url);
+                        logger.error("connection problem " + url + " --- " + driver.getCurrentUrl());
                         throw new IOException();
                     }
                 }

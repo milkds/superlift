@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "wheeldata")
+@Table(name = "wheelinfo")
 public class WheelData {
 
     @Id

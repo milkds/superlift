@@ -47,7 +47,9 @@ public class ItemBuilder {
         item.setItemUrl(driver.getCurrentUrl());
         item.setStatus("ACTIVE");
 
-        //log section
+        logger.info("Item built: " + item);
+
+       /* //log section
         System.out.println("title: " + title);
         System.out.println("What is this: " + wtf);
         System.out.println("What does it include: "+ include);
@@ -59,7 +61,7 @@ public class ItemBuilder {
         System.out.println("Notes: " + notes);
         wheelData.forEach(System.out::println);
         System.out.println("Installation info: " + installInfo);
-        System.out.println("Category: " + category);
+        System.out.println("Category: " + category);*/
 
 
         return item;
@@ -278,7 +280,7 @@ public class ItemBuilder {
                     }
                     break;
                 }
-                default: logger.error("Unexpected field in wheel info at " + driver.getCurrentUrl());
+                default: logger.error("Unexpected field /"+name+"/ in wheel info at " + driver.getCurrentUrl());
             }
         }
 
