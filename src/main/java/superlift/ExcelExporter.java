@@ -169,7 +169,7 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue(item.getImgLinks());
 
-        cell = row.createCell(10);
+        cell = row.createCell(11);
         cell.setCellType(CellType.STRING);
         cell.setCellValue(getWheelDataStr(item.getWheelData()));
 

@@ -6,11 +6,14 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class SileniumUtil {
 
@@ -89,25 +92,20 @@ public class SileniumUtil {
     }
 
     public static void openItemUrl(WebDriver driver, String url) throws IOException {
+        switchToBasicUrl(driver);
         logger.info("Opening item " + url);
-        String currentUrl = driver.getCurrentUrl();
-        String title = "";
-        if (currentUrl.contains("product-detail")){
-            title = driver.findElement(By.cssSelector("h1[class='product-detail-section-part-title']")).getText();
-        }
         driver.get(url);
         int attempts = 0;
         while (true){
             try {
-                WebElement titleEl = driver.findElement(By.cssSelector("h2[class='product-detail-element product-detail-title']"));
-                if (!titleEl.getText().equals(title)){
-                    logger.info("Opened item " + url);
-                    break;
-                }
+                driver.findElement(By.cssSelector("h2[class='product-detail-element product-detail-title']"));
+                logger.info("Opened item " + url);
+                break;
+
             }
             catch (NoSuchElementException e){
                 attempts++;
-                if (attempts==600){
+                if (attempts==60){
                     if (!hasConnection()){
                         attempts = 0;
                     }
@@ -123,5 +121,31 @@ public class SileniumUtil {
                 SileniumUtil.sleepForTimeout(100);
             }
         }
+    }
+
+    private static void switchToBasicUrl(WebDriver driver) {
+        int attempts = 0;
+        while(true){
+            driver.get("https://www.google.com/");
+            try {
+                WebElement checkEl = new FluentWait<>(driver)
+                        .withTimeout(Duration.ofSeconds(30))
+                        .pollingEvery(Duration.ofMillis(2))
+                        .ignoring(WebDriverException.class)
+                        .until(ExpectedConditions.presenceOfElementLocated(By.id("tophf")));
+                break;
+            }
+            catch (TimeoutException e){
+              attempts++;
+              if (attempts==10){
+                  logger.error("google page is not available");
+                  break;
+              }
+            }
+
+
+        }
+
+
     }
 }
