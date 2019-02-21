@@ -91,6 +91,7 @@ public class SileniumUtil {
         }
     }
 
+
     public static void openItemUrl(WebDriver driver, String url) throws IOException {
         switchToBasicUrl(driver);
         logger.info("Opening item " + url);
