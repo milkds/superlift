@@ -95,7 +95,17 @@ public class SileniumUtil {
     public static void openItemUrl(WebDriver driver, String url) throws IOException {
         switchToBasicUrl(driver);
         logger.info("Opening item " + url);
-        driver.get(url);
+        while(true){
+            try {
+                driver.get(url);
+                break;
+            }
+            catch (TimeoutException e){
+             logger.error("timeout while getting page " + url);
+             SileniumUtil.sleepForTimeout(5000);
+            }
+        }
+
         int attempts = 0;
         while (true){
             try {
@@ -106,7 +116,7 @@ public class SileniumUtil {
             }
             catch (NoSuchElementException e){
                 attempts++;
-                if (attempts==60){
+                if (attempts==300){
                     if (!hasConnection()){
                         attempts = 0;
                     }
@@ -115,7 +125,11 @@ public class SileniumUtil {
                         throw new NotFoundException();
                     }
                     else{
-                        logger.error("connection problem " + url + " --- " + driver.getCurrentUrl());
+                        String currentUrl = driver.getCurrentUrl();
+                        if (url.equals(currentUrl)){
+                            break;
+                        }
+                        logger.error("unexpected problem while getting " + url + " --- " + currentUrl);
                         throw new IOException();
                     }
                 }

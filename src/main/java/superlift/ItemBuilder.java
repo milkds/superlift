@@ -237,6 +237,7 @@ public class ItemBuilder {
         }
         for (int i = 0; i < colNameEls.size() ; i++) {
             String name = colNameEls.get(i).getText();
+            name = name.trim();
             switch (name){
                 case "Tire":{
                     for (int j = 1; j < rowEls.size(); j++){
