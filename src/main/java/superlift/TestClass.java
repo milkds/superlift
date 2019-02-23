@@ -21,13 +21,15 @@ public class TestClass {
 
     public static void testItemBuild(){
         WebDriver driver = SileniumUtil.initDriver();
-        driver.get("https://superlift.com/product-detail/k897");
+      //  driver.get("https://superlift.com/product-detail/k897");
+        driver.get("https://superlift.com/product-detail/K445");
        // driver.get("https://superlift.com/product-detail/K931");
        // driver.get("https://superlift.com/product-detail/4310");
        // driver.get("https://superlift.com/product-detail/95030");
         SileniumUtil.sleepForTimeout(10000);
-        ItemBuilder.buildItem(driver);
+        SuperliftDAO.saveItem(ItemBuilder.buildItem(driver));
         driver.close();
+        HibernateUtil.shutdown();
     }
 
     public static void testItemTitles(){
