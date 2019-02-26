@@ -18,7 +18,6 @@ public class TestClass {
         } catch (InvalidFormatException e) {
             e.printStackTrace();
         }
-        HibernateUtil.shutdown();
     }
 
     public static void testDriver(){

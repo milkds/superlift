@@ -15,6 +15,7 @@ public class Controller {
     public static void main(String[] args) {
       //TestClass.testPrice();
         TestClass.testExcel();
+
       //  new Controller().checkSite();
 
     }
@@ -35,7 +36,11 @@ public class Controller {
 
     private void finishCheck(Statistics statistics) {
         statistics.prepareReport();
-        File reportFile = getReportFile(statistics);
+        File report = statistics.getReportFile();
+        File dbExcel = ExcelExporter.prepareReportForEmail();
+        List<File> files = List.of(dbExcel, report);
+        EmailSender.sendMail(files, statistics);
+        //send files
         HibernateUtil.shutdown();
     }
 

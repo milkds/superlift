@@ -126,6 +126,25 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue("FITS");
 
+        cell = row.createCell(13);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("FITS_2");
+
+        cell = row.createCell(14);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("FITS_2_YS");
+
+        cell = row.createCell(15);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("FITS_2_YF");
+
+        cell = row.createCell(16);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("FITS_2_MAKE");
+
+        cell = row.createCell(17);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("FITS_2_MODEL");
     }
 
     private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
@@ -184,7 +203,76 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue(getFitDataStr(SuperliftDAO.getFitmentsForItem(session, item)));
 
+        cell = row.createCell(13);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(getShortFitDataStr(item));
+
+        counter = setDetailedFits(item, counter, sheet, row);
+
+
         return counter;
+    }
+
+    private static Integer setDetailedFits(SuperLiftItem item, Integer counter, Sheet sheet, Row row) {
+        List<Fitment> fitments = item.getFits();
+        int size = fitments.size();
+        if (size>0){
+            Fitment firstFit = fitments.get(0);
+            fillExtendedFit(row, firstFit);
+            if (size>1){
+                for (int i = 1; i < size; i++) {
+                   row = sheet.createRow(counter);
+                   fillExtendedFit(row, fitments.get(i));
+                   counter++;
+                }
+            }
+        }
+
+        return counter;
+    }
+
+    private static void fillExtendedFit(Row row, Fitment fit) {
+        Cell cell = null;
+
+        cell = row.createCell(14);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(fit.getYearStart());
+
+        cell = row.createCell(15);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(fit.getYearFinish());
+
+        String car = fit.getCar();
+        String make = car.split(" ")[0];
+        String model = car.replace(make, "").trim();
+
+        cell = row.createCell(16);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(make);
+
+        cell = row.createCell(17);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(model);
+
+    }
+
+    private static String getShortFitDataStr(SuperLiftItem item) {
+        StringBuilder builder = new StringBuilder();
+        item.getFits().forEach(fit->{
+            builder.append(fit.getYearStart());
+            builder.append("-");
+            builder.append(fit.getYearFinish());
+            builder.append(" ");
+            builder.append(fit.getCar());
+            builder.append(System.lineSeparator());
+        });
+        int length = builder.length();
+
+        if (length>0){
+            builder.setLength(length-2);
+        }
+
+        return builder.toString();
     }
 
     private static String getFitDataStr(List<Fitment> fits) {

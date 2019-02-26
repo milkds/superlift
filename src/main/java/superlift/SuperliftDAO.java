@@ -277,7 +277,8 @@ public class SuperliftDAO {
 
     public static List<Fitment> getFitmentsForItem(Session session, SuperLiftItem item) {
         SuperLiftItem newItem = session.find(SuperLiftItem.class, item.getItemID());
-
-        return newItem.getFits();
+        List<Fitment> fits = newItem.getFits();
+        item.setFits(fits);
+        return fits;
     }
 }
