@@ -14,7 +14,7 @@ public class Controller {
 
     public static void main(String[] args) {
       //TestClass.testPrice();
-        TestClass.testItemBuild();
+        TestClass.testExcel();
       //  new Controller().checkSite();
 
     }

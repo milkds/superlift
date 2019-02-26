@@ -27,11 +27,9 @@ public class Fitment {
 
     @Override
     public String toString() {
-        return "Fitment{" +
-                "car='" + car + '\'' +
+        return "car='" + car + '\'' +
                 ", yearStart=" + yearStart +
-                ", yearFinish=" + yearFinish +
-                '}';
+                ", yearFinish=" + yearFinish;
     }
 
     public String getCar() {

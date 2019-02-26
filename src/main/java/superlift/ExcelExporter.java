@@ -4,6 +4,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.Session;
+import superlift.entities.Fitment;
 import superlift.entities.SuperLiftItem;
 import superlift.entities.WheelData;
 
@@ -21,8 +22,8 @@ public class ExcelExporter {
 
     private static final String FINAL_FILE_PATH = "src\\main\\resources\\from_db.xlsx";
 
-    public static void saveToExcel(Session session) throws IOException, InvalidFormatException {
-        Workbook workbook = writeDBtoExcel(session);
+    public static void saveToExcel() throws IOException, InvalidFormatException {
+        Workbook workbook = writeDBtoExcel();
         FileOutputStream fileOut = new FileOutputStream(FINAL_FILE_PATH);
         workbook.write(fileOut);
         fileOut.close();
@@ -31,8 +32,8 @@ public class ExcelExporter {
         workbook.close();
     }
 
-    public static File prepareReportForEmail(Session session){
-        Workbook workbook = writeDBtoExcel(session);
+    public static File prepareReportForEmail(){
+        Workbook workbook = writeDBtoExcel();
         File file = null;
         try {
             //file =  File.createTempFile("dbToExcel", ".xlsx");
@@ -54,7 +55,8 @@ public class ExcelExporter {
         return file;
     }
 
-    private static Workbook writeDBtoExcel(Session session) {
+    private static Workbook writeDBtoExcel() {
+        Session session = HibernateUtil.getSession();
         List<SuperLiftItem> items = SuperliftDAO.getAllItems();
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
@@ -62,8 +64,9 @@ public class ExcelExporter {
         Integer counter = 1;
         setFirstRow(sheet);
         for (SuperLiftItem item : items){
-            counter = setCells(item,sheet,counter);
+            counter = setCells(item,sheet,counter, session);
         }
+        session.close();
 
         return workbook;
     }
@@ -119,9 +122,13 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue("WHEEL_INFO");
 
+        cell = row.createCell(12);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("FITS");
+
     }
 
-    private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter) {
+    private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
         Row row = sheet.createRow(counter);
         counter++;
 
@@ -171,9 +178,28 @@ public class ExcelExporter {
 
         cell = row.createCell(11);
         cell.setCellType(CellType.STRING);
-        cell.setCellValue(getWheelDataStr(item.getWheelData()));
+        cell.setCellValue(getWheelDataStr(SuperliftDAO.getWheelDataForItem(session, item)));
+
+        cell = row.createCell(12);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(getFitDataStr(SuperliftDAO.getFitmentsForItem(session, item)));
 
         return counter;
+    }
+
+    private static String getFitDataStr(List<Fitment> fits) {
+        StringBuilder builder = new StringBuilder();
+        fits.forEach(fit->{
+            builder.append(fit.toString());
+            builder.append(System.lineSeparator());
+        });
+        int length = builder.length();
+
+        if (length>0){
+            builder.setLength(length-2);
+        }
+
+        return builder.toString();
     }
 
     private static String getWheelDataStr(List<WheelData> wheelData) {

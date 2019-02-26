@@ -1,13 +1,25 @@
 package superlift;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.openqa.selenium.WebDriver;
 import superlift.entities.Title;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class TestClass {
 
+    public static void testExcel(){
+        try {
+            ExcelExporter.saveToExcel();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+        }
+        HibernateUtil.shutdown();
+    }
 
     public static void testDriver(){
         WebDriver driver = SileniumUtil.initDriver();

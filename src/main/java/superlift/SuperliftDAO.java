@@ -258,4 +258,26 @@ public class SuperliftDAO {
         return items;
 
     }
+
+    public static List<WheelData> getWheelDataForItem(Session session, SuperLiftItem item) {
+        List<WheelData> wheelDatas = new ArrayList<>();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<WheelData> crQ = builder.createQuery(WheelData.class);
+        Root<WheelData> root = crQ.from(WheelData.class);
+        crQ.where(builder.equal(root.get("itemSku"), item.getPartNo()));
+        Query q = session.createQuery(crQ);
+        try{
+            wheelDatas = q.getResultList();
+        }
+        catch (NoResultException e){
+        }
+
+        return wheelDatas;
+    }
+
+    public static List<Fitment> getFitmentsForItem(Session session, SuperLiftItem item) {
+        SuperLiftItem newItem = session.find(SuperLiftItem.class, item.getItemID());
+
+        return newItem.getFits();
+    }
 }
