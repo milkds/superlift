@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Controller {
 
     public static void main(String[] args) {
       //TestClass.testPrice();
-        TestClass.testExcel();
-
-      //  new Controller().checkSite();
+      //  TestClass.testExcel();
+       // TestClass.setNotAvailable();
+        new Controller().checkSite();
 
     }
 
@@ -51,8 +52,12 @@ public class Controller {
 
     private void checkPriceChanges(List<String> webItemUrls, Statistics statistics) {
         Map<SuperLiftItem, BigDecimal> changedPricesMap = statistics.getChangedPricesMap();
+        int size = webItemUrls.size();
+        AtomicInteger counter = new AtomicInteger();
         webItemUrls.forEach(url->{
+            counter.getAndIncrement();
             changedPricesMap.putAll(new PriceChangeChecker(url).checkPrice());
+            System.out.println("Checked item " + counter + " of total " + size);
         });
     }
 
@@ -75,7 +80,7 @@ public class Controller {
                     //that's for case when item is present in sitemap, but actually it doesn't open.
                     SuperLiftItem item = new SuperLiftItem();
                     item.setItemUrl(url);
-                    item.setStatus("DELETED");
+                    item.setStatus("NOT AVAILABLE");
                     SuperliftDAO.saveItem(item);
                     continue;
                 }

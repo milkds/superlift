@@ -151,8 +151,6 @@ public class Statistics {
                 statisticsKeeper.append("------------------------------");
                 statisticsKeeper.append(System.lineSeparator());
             });
-            v.forEach(this::appendItem);
-            appendVisualSep();
             if (deletedItemsMap.containsKey(k)){
                 statisticsKeeper.append("Deleted ");
                 appendCategory(k);
@@ -194,6 +192,7 @@ public class Statistics {
     }
 
     private void printChangesByCategories() {
+        categoryFinishMap.remove("null");
         categoryFinishMap.forEach((k, v)->{
             statisticsKeeper.append("Category ");
             statisticsKeeper.append(k);

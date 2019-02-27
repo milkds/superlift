@@ -2,6 +2,7 @@ package superlift;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.openqa.selenium.WebDriver;
+import superlift.entities.SuperLiftItem;
 import superlift.entities.Title;
 
 import java.io.IOException;
@@ -9,6 +10,17 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class TestClass {
+
+    public static void setNotAvailable(){
+        List<SuperLiftItem> items = SuperliftDAO.getAllItems();
+        items.forEach(item->{
+            if (item.getTitle()==null){
+              // SuperliftDAO.updatePriceForItem(item.getItemID(), new BigDecimal(0));
+            }
+        });
+        System.out.println("finished");
+        HibernateUtil.shutdown();
+    }
 
     public static void testExcel(){
         try {

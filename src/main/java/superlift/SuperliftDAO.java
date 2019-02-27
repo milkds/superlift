@@ -31,6 +31,9 @@ public class SuperliftDAO {
     }
 
     public static void saveItem(SuperLiftItem item) {
+        if (itemExists(item)){
+            return;
+        }
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
         try {
@@ -58,7 +61,22 @@ public class SuperliftDAO {
                 transaction.rollback();
             }
         }
-        //impl
+    }
+
+    private static boolean itemExists(SuperLiftItem item) {
+        Session session = HibernateUtil.getSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<SuperLiftItem> crQ = builder.createQuery(SuperLiftItem.class);
+        Root<SuperLiftItem> root = crQ.from(SuperLiftItem.class);
+        crQ.where(builder.equal(root.get("itemUrl"), item.getItemUrl()));
+        Query q = session.createQuery(crQ);
+        try (session) {
+        SuperLiftItem testItem = (SuperLiftItem) q.getSingleResult();
+        } catch (NoResultException e) {
+            return false;
+        }
+
+        return true;
     }
 
     public static void saveTitle(Title title) {
@@ -249,7 +267,7 @@ public class SuperliftDAO {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<SuperLiftItem> crQ = builder.createQuery(SuperLiftItem.class);
         Root<SuperLiftItem> root = crQ.from(SuperLiftItem.class);
-        crQ.where(builder.notEqual(root.get("status"), "DELETED"));
+        crQ.where(builder.and(builder.notEqual(root.get("status"), "DELETED"), builder.notEqual(root.get("status"), "NOT AVAILABLE")));
         Query q = session.createQuery(crQ);
         items = q.getResultList();
         session.close();
