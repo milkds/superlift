@@ -11,6 +11,12 @@ import java.util.List;
 
 public class TestClass {
 
+
+    public static void testItemGroup(){
+         ParseLauncher.launchParse(statistics);
+         HibernateUtil.shutdown();
+    }
+
     public static void setNotAvailable(){
         List<SuperLiftItem> items = SuperliftDAO.getAllItems();
         items.forEach(item->{
@@ -39,7 +45,7 @@ public class TestClass {
     }
 
     public static void getCats(){
-       ParseLauncher.launchParse();
+       ParseLauncher.launchParse(statistics);
     }
 
     public static void testItemBuild(){

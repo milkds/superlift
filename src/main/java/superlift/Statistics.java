@@ -1,5 +1,6 @@
 package superlift;
 
+import superlift.entities.ItemGroup;
 import superlift.entities.SuperLiftItem;
 
 import java.io.BufferedWriter;
@@ -22,6 +23,8 @@ public class Statistics {
     private Instant start;
     private Instant finish;
 
+    private List<ItemGroup> deletedGroups = new ArrayList<>();
+    private List<ItemGroup> addedGroups= new ArrayList<>();
     private List<SuperLiftItem> deletedItems = new ArrayList<>();
     private List<SuperLiftItem> addedItems = new ArrayList<>();
     private Map<SuperLiftItem, BigDecimal> changedPricesMap = new HashMap<>();
@@ -75,11 +78,28 @@ public class Statistics {
     }
 
     private void showStatistics() {
+        printChangesByItemGroups();
         printChangesByCategories();
         printChangesByItems();
         printPriceChanges();
         printTotals();
         printTime();
+    }
+
+    private void printChangesByItemGroups() {
+        statisticsKeeper.append("ADDED ITEM GROUPS: ");
+        statisticsKeeper.append(System.lineSeparator());
+        addedGroups.forEach(group->{
+            statisticsKeeper.append(group.getGroupUrl());
+            statisticsKeeper.append(System.lineSeparator());
+        });
+        statisticsKeeper.append("DELETED ITEM GROUPS: ");
+        statisticsKeeper.append(System.lineSeparator());
+        deletedGroups.forEach(group->{
+            statisticsKeeper.append(group.getGroupUrl());
+            statisticsKeeper.append(System.lineSeparator());
+        });
+        appendVisualSep();
     }
 
     private void printTime() {
@@ -341,5 +361,17 @@ public class Statistics {
     }
     public void setStatisticsKeeper(StringBuilder statisticsKeeper) {
         this.statisticsKeeper = statisticsKeeper;
+    }
+    public List<ItemGroup> getDeletedGroups() {
+        return deletedGroups;
+    }
+    public void setDeletedGroups(List<ItemGroup> deletedGroups) {
+        this.deletedGroups = deletedGroups;
+    }
+    public List<ItemGroup> getAddedGroups() {
+        return addedGroups;
+    }
+    public void setAddedGroups(List<ItemGroup> addedGroups) {
+        this.addedGroups = addedGroups;
     }
 }

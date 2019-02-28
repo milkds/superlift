@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Controller {
 
     public static void main(String[] args) {
-      //TestClass.testPrice();
+     //TestClass.testItemGroup();
       //  TestClass.testExcel();
        // TestClass.setNotAvailable();
         new Controller().checkSite();
@@ -22,9 +22,10 @@ public class Controller {
     }
 
     public void checkSite(){
+        Statistics statistics = new Statistics();
+        ParseLauncher.launchParse(statistics);
         List<String> webItemUrls = getWebItemUrls();
         List<String> dbItemUrls = SuperliftDAO.getAllItemUrls();
-        Statistics statistics = new Statistics();
         if (changesDetected(webItemUrls, dbItemUrls)){
             WebDriver driver = SileniumUtil.initDriver();
             deleteItems(webItemUrls, dbItemUrls, statistics);

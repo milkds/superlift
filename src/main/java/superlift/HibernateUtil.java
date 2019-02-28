@@ -38,6 +38,7 @@ public class HibernateUtil {
                 sources.addAnnotatedClass(SuperLiftItem.class);
                 sources.addAnnotatedClass(Fitment.class);
                 sources.addAnnotatedClass(WheelData.class);
+                sources.addAnnotatedClass(ItemGroup.class);
                 Metadata metadata = sources.getMetadataBuilder().build();
 
                 sessionFactory = metadata.getSessionFactoryBuilder().build();

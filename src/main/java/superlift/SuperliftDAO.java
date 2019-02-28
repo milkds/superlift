@@ -18,17 +18,74 @@ import java.util.List;
 public class SuperliftDAO {
     private static final Logger logger = LogManager.getLogger(SuperliftDAO.class.getName());
 
-
+    //ItemGroup section
+    ////////////////////////////////////////
     public static List<String> getItemsBySubcategory(String subCatName) {
-        //impl
-        return new ArrayList<>();
+        Session session = HibernateUtil.getSession();
+        List<String> urls = new ArrayList<>();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<String> crQ = builder.createQuery(String.class);
+        Root<ItemGroup> root = crQ.from(ItemGroup.class);
+        crQ.where(builder.equal(root.get("subCatName"), subCatName)).select(root.get("groupUrl"));
+        Query q = session.createQuery(crQ);
+        urls = q.getResultList();
+        session.close();
+
+        return urls;
     }
 
-    public static SuperLiftItem markItemDeleted(String dbLink) {
-        //impl
+    public static ItemGroup markItemDeleted(String dbLink) {
+        ItemGroup item = new ItemGroup();
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            item = getItemGroupByUrl(session, dbLink);
+            item.setStatus("DELETED");
+            transaction.commit();
+            session.close();
+            logger.info("marked itemGroup as deleted: " + item);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
 
-        return new SuperLiftItem();
+        return item;
     }
+
+    public static void saveItemGroup(ItemGroup item) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            session.persist(item);
+            transaction.commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+
+    }
+
+    private static ItemGroup getItemGroupByUrl(Session session, String dbLink) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ItemGroup> crQ = builder.createQuery(ItemGroup.class);
+        Root<ItemGroup> root = crQ.from(ItemGroup.class);
+        crQ.where(builder.and(builder.equal(root.get("groupUrl"), dbLink),
+                builder.equal(root.get("status"), "ACTIVE")));
+        Query q = session.createQuery(crQ);
+
+        return (ItemGroup) q.getSingleResult();
+    }
+    /////////////////////////////////////////////////////////////////
+
 
     public static void saveItem(SuperLiftItem item) {
         if (itemExists(item)){
@@ -299,4 +356,6 @@ public class SuperliftDAO {
         item.setFits(fits);
         return fits;
     }
+
+
 }

@@ -19,7 +19,6 @@ public class DirectChecker extends SubCatChecker {
         WebDriver driver = getDriver();
         List<String> catLinks = getCatLink(driver);
         checkItemsBySubCategories(catLinks, driver);
-
     }
 
     private List<String> getCatLink(WebDriver driver) {

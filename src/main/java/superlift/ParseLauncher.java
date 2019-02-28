@@ -8,20 +8,20 @@ import superlift.checkers.DropdownChecker;
 import superlift.checkers.NoDropChecker;
 import superlift.checkers.SubCatChecker;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParseLauncher {
 
-    public static void launchParse(){
-        Statistics statistics = new Statistics();
+    public static void launchParse(Statistics statistics){
         WebDriver driver = SileniumUtil.initDriver();
 
         List<SubCatChecker> checkers = getCheckers(driver, statistics);
         checkAllSubcats(checkers);
 
-        driver.quit();
+        System.out.println("Total Item Groups: " + statistics.getAddedGroups().size());
+
+        driver.close();
     }
 
     private static void checkAllSubcats(List<SubCatChecker> checkers) {
@@ -39,7 +39,7 @@ public class ParseLauncher {
                 checkers.add(new DirectChecker(catID, driver, statistics));
             }
             else if (dropDown(categoryEl)){
-              //  checkers.add(new DropdownChecker(catID, driver, statistics));
+                checkers.add(new DropdownChecker(catID, driver, statistics));
             }
             else {
                 checkers.add(new NoDropChecker(catID, driver, statistics));

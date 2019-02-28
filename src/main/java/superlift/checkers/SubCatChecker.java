@@ -9,6 +9,7 @@ import superlift.SileniumUtil;
 import superlift.Statistics;
 import org.openqa.selenium.WebDriver;
 import superlift.SuperliftDAO;
+import superlift.entities.ItemGroup;
 import superlift.entities.SuperLiftItem;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public abstract class SubCatChecker {
             List<String> linksDB = SuperliftDAO.getItemsBySubcategory(subCatName);
             if (changesPresent(linksWeb, linksDB)){
                 deleteItems(linksWeb, linksDB);
-                addItems(linksWeb, linksDB, driver);
+                addItems(linksWeb, linksDB, driver, subCatName);
             }
             //switching to base page, to avoid staleElementException
             driver.get("https://www.superlift.com/");
@@ -87,25 +88,27 @@ public abstract class SubCatChecker {
 
     private void deleteItems(List<String> linksWeb, List<String> linksDB) {
         Statistics statistics = getStatistics();
-        List<SuperLiftItem> deletedItems = statistics.getDeletedItems();
+        List<ItemGroup> deletedItems = statistics.getDeletedGroups();
         for (String dbLink: linksDB ){
             if (!linksWeb.contains(dbLink)){
-                SuperLiftItem deletedItem = SuperliftDAO.markItemDeleted(dbLink);
+                ItemGroup deletedItem = SuperliftDAO.markItemDeleted(dbLink);
                 deletedItems.add(deletedItem);
             }
         }
     }
 
-    private void addItems(List<String> linksWeb, List<String> linksDB, WebDriver driver) {
+    private void addItems(List<String> linksWeb, List<String> linksDB, WebDriver driver, String subCatName) {
         Statistics statistics = getStatistics();
-        List<SuperLiftItem> addedItems = statistics.getAddedItems();
+        List<ItemGroup> addedItems = statistics.getAddedGroups();
         for (String webLink: linksWeb){
             if (!linksDB.contains(webLink)){
-                getItemPage(driver, webLink);
-                SuperLiftItem newItem = ItemBuilder.buildItem(driver);
-                SuperliftDAO.saveItem(newItem);
-                addedItems.add(newItem);
-                logger.info("New Item added: " + webLink);
+                ItemGroup item = new ItemGroup();
+                item.setStatus("ACTIVE");
+                item.setSubCatName(subCatName);
+                item.setGroupUrl(webLink);
+                SuperliftDAO.saveItemGroup(item);
+                addedItems.add(item);
+                logger.info("New ItemGroup added: " + webLink);
             }
         }
     }
