@@ -3,6 +3,7 @@ package superlift.entities;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "fits")
@@ -72,5 +73,20 @@ public class Fitment {
         this.items = items;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fitment)) return false;
+        Fitment fitment = (Fitment) o;
+        return fitID == fitment.fitID &&
+                Objects.equals(car, fitment.car) &&
+                Objects.equals(yearStart, fitment.yearStart) &&
+                Objects.equals(yearFinish, fitment.yearFinish);
+    }
 
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(fitID, car, yearStart, yearFinish);
+    }
 }
