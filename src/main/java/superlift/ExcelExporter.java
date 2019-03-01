@@ -41,7 +41,7 @@ public class ExcelExporter {
             fName = fName.replaceAll(":", "-");
             fName = fName.substring(0, fName.length()-3);
             fName = fName + "_Superlift_parsedItems.xlsx";
-            fName = "C:/Dropbox/Superlift/"+ fName;
+            fName = "C:/Dropbox/Shared_ServerGrisha/SuperliftParse/"+ fName;
             file = new File(fName);
             FileOutputStream fileOut = new FileOutputStream(file);
             workbook.write(fileOut);
