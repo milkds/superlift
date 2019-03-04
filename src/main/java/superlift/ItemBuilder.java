@@ -29,7 +29,7 @@ public class ItemBuilder {
         String keyDetails = getKeyDetails(driver);
         String notes = getNotes(driver);
         List<WheelData> wheelData = getWheelData(driver, partNo);
-        String installInfo = getInstallInfo(driver);
+        String installInfo = getInstallInfo(driver, item);
         String category = getCategory(title);
 
         item.setTitle(title);
@@ -146,7 +146,7 @@ public class ItemBuilder {
     }
 
 
-    private static String getInstallInfo(WebDriver driver) {
+    private static String getInstallInfo(WebDriver driver, SuperLiftItem item) {
         WebElement tabEl = null;
         WebElement instInfoEl = null;
         String tabID = "";
@@ -161,7 +161,7 @@ public class ItemBuilder {
             return "NO INSTALL INFO";
         }
 
-        //activating Tire&Wheel Tab
+        //activating Install Tab
         while (true){
             try {
                 instInfoEl = driver.findElement(By.id(tabID));
@@ -175,8 +175,19 @@ public class ItemBuilder {
                 return "NO INSTALL INFO";
             }
         }
+        WebElement manualPathEl = null;
+        String result = instInfoEl.getText();
+        if (result.contains("Download Install Guide")){
+            result = result.replaceAll("Download Install Guide", "");
+            try {
+                manualPathEl = instInfoEl.findElement(By.tagName("a"));
+                item.setInstallGuideLink(manualPathEl.getAttribute("href"));
+            }
+            catch (NoSuchElementException ignored){
+            }
+        }
 
-        return instInfoEl.getText();
+        return result;
     }
 
     private static List<WheelData> getWheelData(WebDriver driver, String partNo) {

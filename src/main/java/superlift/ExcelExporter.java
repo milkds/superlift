@@ -145,6 +145,34 @@ public class ExcelExporter {
         cell = row.createCell(17);
         cell.setCellType(CellType.STRING);
         cell.setCellValue("FITS_2_MODEL");
+
+        cell = row.createCell(18);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_TIRE");
+
+        cell = row.createCell(19);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_WHEEL");
+
+        cell = row.createCell(20);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_BACKSPACING");
+
+        cell = row.createCell(21);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_OFFSET");
+
+        cell = row.createCell(22);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_BACKSPRING");
+
+        cell = row.createCell(23);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_BACKSPACING_INCH");
+
+        cell = row.createCell(24);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("WHEEL_INFO_OFFSET_MM");
     }
 
     private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
@@ -207,10 +235,74 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue(getShortFitDataStr(item));
 
-        counter = setDetailedFits(item, counter, sheet, row);
+        int size = item.getWheelData().size();
+        int wheelDataCounter = 0;
+        if (size>0){
+            wheelDataCounter = counter;
+        }
 
+        counter = setDetailedFits(item, counter, sheet, row);
+        if (wheelDataCounter!=0){
+            wheelDataCounter = setWheelInfo(item, wheelDataCounter, sheet);
+            if (counter<wheelDataCounter){
+                counter = wheelDataCounter;
+            }
+        }
 
         return counter;
+    }
+
+    private static int setWheelInfo(SuperLiftItem item, int wheelDataCounter, Sheet sheet) {
+        List<WheelData> data = item.getWheelData();
+        Row row = sheet.getRow(wheelDataCounter-1);
+        fillExtendedWheelData(row, data.get(0));
+        int newCounter = wheelDataCounter;
+        int dataSize = data.size();
+        if (dataSize>1){
+            for (int i = 1; i < dataSize; i++) {
+                row = sheet.getRow(newCounter);
+                if (row==null){
+                    row = sheet.createRow(newCounter);
+                }
+                fillExtendedWheelData(row, data.get(i));
+                newCounter++;
+            }
+        }
+
+
+        return newCounter;
+    }
+
+    private static void fillExtendedWheelData(Row row, WheelData wheelData) {
+        Cell cell = null;
+
+        cell = row.createCell(18);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getTire());
+
+        cell = row.createCell(19);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getWheel());
+
+        cell = row.createCell(20);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getBackspacing());
+
+        cell = row.createCell(21);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getOffset());
+
+        cell = row.createCell(22);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getBackspring());
+
+        cell = row.createCell(23);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getBackspacingInch());
+
+        cell = row.createCell(24);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(wheelData.getOffsetMM());
     }
 
     private static Integer setDetailedFits(SuperLiftItem item, Integer counter, Sheet sheet, Row row) {

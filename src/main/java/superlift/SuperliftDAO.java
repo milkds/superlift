@@ -347,6 +347,8 @@ public class SuperliftDAO {
         catch (NoResultException e){
         }
 
+        item.setWheelData(wheelDatas);
+
         return wheelDatas;
     }
 

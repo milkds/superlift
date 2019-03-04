@@ -1,5 +1,6 @@
 package superlift;
 
+import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
 import superlift.entities.SuperLiftItem;
@@ -13,15 +14,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Controller {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
      //TestClass.testItemGroup();
       //  TestClass.testExcel();
        // TestClass.setNotAvailable();
         new Controller().checkSite();
+     //  TestClass.testDataSave();
 
     }
 
     public void checkSite(){
+        DBSaver.backupDB();
         Statistics statistics = new Statistics();
         ParseLauncher.launchParse(statistics);
         List<String> webItemUrls = getWebItemUrls();

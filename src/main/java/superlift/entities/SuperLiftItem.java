@@ -1,6 +1,7 @@
 package superlift.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "items")
-public class SuperLiftItem {
+public class SuperLiftItem implements Serializable {
 
     @Id
     @Column(name = "ITEM_ID")
@@ -50,6 +51,9 @@ public class SuperLiftItem {
 
     @Column (name = "STATUS")
     private String status;
+
+    @Column (name = "INSTALL_GUIDE_LINK")
+    private String installGuideLink;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -209,5 +213,13 @@ public class SuperLiftItem {
 
     public void setWheelData(List<WheelData> wheelData) {
         this.wheelData = wheelData;
+    }
+
+    public String getInstallGuideLink() {
+        return installGuideLink;
+    }
+
+    public void setInstallGuideLink(String installGuideLink) {
+        this.installGuideLink = installGuideLink;
     }
 }

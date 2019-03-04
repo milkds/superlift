@@ -1,19 +1,64 @@
 package superlift;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.hibernate.Session;
 import org.openqa.selenium.WebDriver;
 import superlift.entities.SuperLiftItem;
 import superlift.entities.Title;
 
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class TestClass {
 
 
+    public static void testDataSave() throws IOException, InterruptedException {
+        DBSaver.backupDB();
+       /* Runtime runtime = Runtime.getRuntime();
+        String mysqlPath = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump";
+        String executeCmd = mysqlPath + " -u root "+" -proot "+"superlift"+" -r D:\\backup.sql";
+        Process runtimeProcess = runtime.exec(executeCmd);
+        int processComplete = runtimeProcess.waitFor();
+        *//*if(processComplete == 0){
+            System.out.println("process complete");
+        } else {
+            System.out.println("process failed");
+        }*/
+    }
+
+
+
+    public static void testDataSaveByHibernate() throws IOException {
+        Session session = HibernateUtil.getSession();
+// for every table, have the bean implement Serializable and use the next 4 lines
+        List <SuperLiftItem> tblCollection = session.createCriteria(SuperLiftItem.class).list();
+        FileOutputStream backup = new FileOutputStream("src\\main\\resources\\backupOfSuperlift.dat");
+        ObjectOutputStream backupWriter = new ObjectOutputStream(backup);
+        backupWriter.writeObject(tblCollection);
+        tblCollection.forEach(item -> {
+            try {
+                backupWriter.writeObject(item);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    backupWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        System.out.println("finished save");
+    }
+    public static void testDataRead() throws FileNotFoundException {
+        FileInputStream fi = new FileInputStream(new File("myObjects.txt"));
+        //ObjectInputStream oi = new ObjectInputStream(fi);
+    }
+
     public static void testItemGroup(){
-         ParseLauncher.launchParse(statistics);
+         ParseLauncher.launchParse(new Statistics());
          HibernateUtil.shutdown();
     }
 
@@ -31,11 +76,12 @@ public class TestClass {
     public static void testExcel(){
         try {
             ExcelExporter.saveToExcel();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
+            System.out.println("finished");
+        } catch (IOException | InvalidFormatException e) {
             e.printStackTrace();
         }
+
+        HibernateUtil.shutdown();
     }
 
     public static void testDriver(){
@@ -45,7 +91,7 @@ public class TestClass {
     }
 
     public static void getCats(){
-       ParseLauncher.launchParse(statistics);
+       ParseLauncher.launchParse(new Statistics());
     }
 
     public static void testItemBuild(){
