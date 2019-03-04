@@ -177,8 +177,8 @@ public class ItemBuilder {
         }
         WebElement manualPathEl = null;
         String result = instInfoEl.getText();
-        if (result.contains("Download Install Guide")){
-            result = result.replaceAll("Download Install Guide", "");
+        if (result.contains("DOWNLOAD INSTALL GUIDE")){
+            result = result.replaceAll("DOWNLOAD INSTALL GUIDE", "");
             try {
                 manualPathEl = instInfoEl.findElement(By.tagName("a"));
                 item.setInstallGuideLink(manualPathEl.getAttribute("href"));
