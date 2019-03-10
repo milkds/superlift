@@ -15,11 +15,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Controller {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-      TestClass.testItemBuild();
+    //  TestClass.testItemBuild();
      //TestClass.testItemGroup();
       //  TestClass.testExcel();
        // TestClass.setNotAvailable();
-   //     new Controller().checkSite();
+        new Controller().checkSite();
      //  TestClass.testDataSave();
 
     }

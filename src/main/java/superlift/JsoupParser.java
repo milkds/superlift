@@ -120,9 +120,31 @@ public class JsoupParser {
                 urls.add(urlEl.text());
             }
         }
-
+        List<String> notInSiteMapUrls = getNotInSiteMapUrls();
+        urls.addAll(notInSiteMapUrls);
         urls.forEach(System.out::println);
 
         return urls;
+    }
+
+    private List<String> getNotInSiteMapUrls() {
+        List<String> result = new ArrayList<>();
+
+        result.add("https://superlift.com/product-detail/40043");
+        result.add("https://superlift.com/product-detail/40044");
+        result.add("https://superlift.com/product-detail/40045");
+        result.add("https://superlift.com/product-detail/40046");
+        result.add("https://superlift.com/product-detail/40047");
+        result.add("https://superlift.com/product-detail/40048");
+
+        result.add("https://superlift.com/product-detail/K173");
+        result.add("https://superlift.com/product-detail/K173B");
+        result.add("https://superlift.com/product-detail/K174B");
+        result.add("https://superlift.com/product-detail/K178");
+        result.add("https://superlift.com/product-detail/K178B");
+        result.add("https://superlift.com/product-detail/K179");
+        result.add("https://superlift.com/product-detail/K179B");
+
+        return result;
     }
 }
