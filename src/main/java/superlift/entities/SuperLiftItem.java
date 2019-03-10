@@ -55,6 +55,12 @@ public class SuperLiftItem implements Serializable {
     @Column (name = "INSTALL_GUIDE_LINK")
     private String installGuideLink;
 
+    @Column (name = "POSITION")
+    private String position;
+
+    @Column (name = "LIFT")
+    private String lift;
+
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "items_fits",
@@ -221,5 +227,21 @@ public class SuperLiftItem implements Serializable {
 
     public void setInstallGuideLink(String installGuideLink) {
         this.installGuideLink = installGuideLink;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getLift() {
+        return lift;
+    }
+
+    public void setLift(String lift) {
+        this.lift = lift;
     }
 }

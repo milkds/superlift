@@ -12,6 +12,11 @@ import java.util.List;
 
 public class TestClass {
 
+    public static void testTitle(){
+        String title = "\" Lift Kit-73-87 GM 1 Ton PU-Small Block Engine-Rr Block Kit w SL Shocks";
+        System.out.println(ItemBuilder.getLift(title));
+    }
+
 
     public static void testDataSave() throws IOException, InterruptedException {
         DBSaver.backupDB();

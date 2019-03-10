@@ -177,6 +177,14 @@ public class ExcelExporter {
         cell = row.createCell(25);
         cell.setCellType(CellType.STRING);
         cell.setCellValue("INSTALL_GUIDE_LINK");
+
+        cell = row.createCell(26);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("POSITION");
+
+        cell = row.createCell(27);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("LIFT");
     }
 
     private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
@@ -242,6 +250,14 @@ public class ExcelExporter {
         cell = row.createCell(25);
         cell.setCellType(CellType.STRING);
         cell.setCellValue(item.getInstallGuideLink());
+
+        cell = row.createCell(26);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(item.getPosition());
+
+        cell = row.createCell(27);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(item.getLift());
 
         int size = item.getWheelData().size();
         int wheelDataCounter = 0;

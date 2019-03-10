@@ -31,6 +31,8 @@ public class ItemBuilder {
         List<WheelData> wheelData = getWheelData(driver, partNo);
         String installInfo = getInstallInfo(driver, item);
         String category = getCategory(title);
+        String position = getPosition(title);
+        String lift = getLift(title);
 
         item.setTitle(title);
         item.setWtf(wtf);
@@ -46,6 +48,8 @@ public class ItemBuilder {
         item.setCategory(category);
         item.setItemUrl(driver.getCurrentUrl());
         item.setStatus("ACTIVE");
+        item.setPosition(position);
+        item.setLift(lift);
 
         logger.info("Item built: " + item);
 
@@ -65,6 +69,28 @@ public class ItemBuilder {
 
 
         return item;
+    }
+
+    private static String getLift(String title) {
+        if (!title.contains("\"")){
+            return "";
+        }
+
+        return title.substring(0, title.indexOf("\""));
+    }
+
+    private static String getPosition(String title) {
+        if (!title.contains("lift")){
+            return "";
+        }
+        if (title.toLowerCase().contains("front")){
+            return "front";
+        }
+        if (title.toLowerCase().contains("rear")){
+            return "rear";
+        }
+
+        return "";
     }
 
     private static String getCategory(String titleStr) {
