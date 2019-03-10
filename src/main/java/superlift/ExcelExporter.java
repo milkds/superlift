@@ -173,6 +173,10 @@ public class ExcelExporter {
         cell = row.createCell(24);
         cell.setCellType(CellType.STRING);
         cell.setCellValue("WHEEL_INFO_OFFSET_MM");
+
+        cell = row.createCell(25);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("INSTALL_GUIDE_LINK");
     }
 
     private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
@@ -234,6 +238,10 @@ public class ExcelExporter {
         cell = row.createCell(13);
         cell.setCellType(CellType.STRING);
         cell.setCellValue(getShortFitDataStr(item));
+
+        cell = row.createCell(25);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(item.getInstallGuideLink());
 
         int size = item.getWheelData().size();
         int wheelDataCounter = 0;
