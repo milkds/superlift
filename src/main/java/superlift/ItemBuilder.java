@@ -80,7 +80,7 @@ public class ItemBuilder {
     }
 
     private static String getPosition(String title) {
-        if (!title.contains("lift")){
+        if (!title.contains("Lift")){
             return "";
         }
         if (title.toLowerCase().contains("front")){
