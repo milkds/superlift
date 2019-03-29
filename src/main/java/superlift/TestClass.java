@@ -3,21 +3,32 @@ package superlift;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.hibernate.Session;
 import org.openqa.selenium.WebDriver;
+import superlift.entities.ItemGroup;
 import superlift.entities.SuperLiftItem;
 import superlift.entities.Title;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestClass {
+
+
+    public static void testPartNoGetter(){
+        ItemGroup group = new ItemGroup();
+        group.setGroupUrl("https://superlift.com/2-5in-jeep-lift-kit-2018-and-newer-jeep-wrangler-jl-unlimited");
+        List<ItemGroup> newIgs = new ArrayList<>();
+        newIgs.add(group);
+        List<String> urls = SileniumUtil.getUrlsFromNewItemGroups(newIgs);
+        urls.forEach(System.out::println);
+
+    }
 
     public static void testTitle(){
         String title = "\" Lift Kit-73-87 GM 1 Ton PU-Small Block Engine-Rr Block Kit w SL Shocks";
        // System.out.println(ItemBuilder.getLift(title));
     }
-
-
     public static void testDataSave() throws IOException, InterruptedException {
         DBSaver.backupDB();
        /* Runtime runtime = Runtime.getRuntime();
@@ -31,9 +42,6 @@ public class TestClass {
             System.out.println("process failed");
         }*/
     }
-
-
-
     public static void testDataSaveByHibernate() throws IOException {
         Session session = HibernateUtil.getSession();
 // for every table, have the bean implement Serializable and use the next 4 lines
@@ -61,12 +69,10 @@ public class TestClass {
         FileInputStream fi = new FileInputStream(new File("myObjects.txt"));
         //ObjectInputStream oi = new ObjectInputStream(fi);
     }
-
     public static void testItemGroup(){
          ParseLauncher.launchParse(new Statistics());
          HibernateUtil.shutdown();
     }
-
     public static void setNotAvailable(){
         List<SuperLiftItem> items = SuperliftDAO.getAllItems();
         items.forEach(item->{
@@ -77,7 +83,6 @@ public class TestClass {
         System.out.println("finished");
         HibernateUtil.shutdown();
     }
-
     public static void testExcel(){
         try {
             ExcelExporter.saveToExcel();
@@ -88,17 +93,14 @@ public class TestClass {
 
         HibernateUtil.shutdown();
     }
-
     public static void testDriver(){
         WebDriver driver = SileniumUtil.initDriver();
         SileniumUtil.sleepForTimeout(5000);
         driver.quit();
     }
-
     public static void getCats(){
        ParseLauncher.launchParse(new Statistics());
     }
-
     public static void testItemBuild(){
         WebDriver driver = SileniumUtil.initDriver();
       //  driver.get("https://superlift.com/product-detail/k897");
@@ -113,7 +115,6 @@ public class TestClass {
         driver.close();
         HibernateUtil.shutdown();
     }
-
     public static void testItemTitles(){
         List<String> itemUrls = new JsoupParser().getXmlItemUrls();
         List<String> dbItemUrls = SuperliftDAO.getUrlsToReparse();
@@ -139,7 +140,6 @@ public class TestClass {
         SileniumUtil.sleepForTimeout(15000);
         HibernateUtil.shutdown();
     }
-
     public static void testCategoryFromTitle(){
         List<Title> titles = SuperliftDAO.getAllTitles();
         titles.forEach(title->{
@@ -247,7 +247,6 @@ public class TestClass {
         });
         System.out.println("finished");
     }
-
     public static void testWrongLinkDr(){
         WebDriver driver = SileniumUtil.initDriver();
         driver.get("https://superlift.com/product-detail/4040");
@@ -255,7 +254,6 @@ public class TestClass {
         System.out.println(driver.getCurrentUrl());
         driver.quit();
     }
-
     public static void testPrice(){
        BigDecimal decimal = new JsoupParser().getNewPrice("https://superlift.com/product-detail/k897");
      //   BigDecimal decimal = new JsoupParser().getNewPrice("https://superlift.com/product-detail/4040");

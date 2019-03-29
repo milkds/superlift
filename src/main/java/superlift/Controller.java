@@ -3,11 +3,13 @@ package superlift;
 import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
+import superlift.entities.ItemGroup;
 import superlift.entities.SuperLiftItem;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,20 +17,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Controller {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-     // TestClass.testTitle();
+      TestClass.testPartNoGetter();
      //TestClass.testItemGroup();
       //  TestClass.testExcel();
        // TestClass.setNotAvailable();
-        new Controller().checkSite();
+       // new Controller().checkSite();
      //  TestClass.testDataSave();
 
     }
 
     public void checkSite(){
-        DBSaver.backupDB();
+       // DBSaver.backupDB();
         Statistics statistics = new Statistics();
         ParseLauncher.launchParse(statistics);
+        List<String> urlsFromNewItemGroups = getUrlsFromNewItemGroups(statistics);
         List<String> webItemUrls = getWebItemUrls();
+        if (urlsFromNewItemGroups.size()!=0){
+            webItemUrls.addAll(urlsFromNewItemGroups);
+        }
         List<String> dbItemUrls = SuperliftDAO.getAllItemUrls();
         if (changesDetected(webItemUrls, dbItemUrls)){
             WebDriver driver = SileniumUtil.initDriver();
@@ -38,6 +44,16 @@ public class Controller {
         }
         checkPriceChanges(webItemUrls, statistics);
         finishCheck(statistics);
+    }
+
+    private List<String> getUrlsFromNewItemGroups(Statistics statistics) {
+        List<ItemGroup> newItemGroups = statistics.getAddedGroups();
+        if (newItemGroups.size()==0){
+            return new ArrayList<>();
+        }
+
+
+        return SileniumUtil.getUrlsFromNewItemGroups(newItemGroups);
     }
 
     private void finishCheck(Statistics statistics) {

@@ -13,7 +13,7 @@
     </Appenders>
 
     <Loggers>
-        <Root level="info">
+        <Root level="debug">
             <appender-ref ref="console"/>
         </Root>
         <Logger name="org.hibernate" additivity="false" level="error"/>
