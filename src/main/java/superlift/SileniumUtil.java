@@ -25,9 +25,12 @@ public class SileniumUtil {
 
     public static WebDriver initDriver(){
         System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
-      //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
-      //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "212.83.162.199:54321"); //very slow
-        ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
+        //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
+        //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "212.83.162.199:54321"); //very slow
+        // ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
+        ChromeOptions options = new ChromeOptions(); //for tests
+        //options.addArguments("--proxy-server=http://" + "217.69.10.117:3128");
+        options.addArguments("--user-data-dir=C:\\Users\\Grisha\\AppData\\Local\\Google\\Chrome\\User Data\\");
 
         options.addArguments("--start-maximized");
         WebDriver driver = new ChromeDriver(options);
@@ -162,11 +165,12 @@ public class SileniumUtil {
                 return;
             }
             List<String> urlFromItemGroup = getUrlsFromItemGroup(driver);
+            result.addAll(urlFromItemGroup);
             switchToBasicUrl(driver);
         });
 
         driver.close();
-        return new ArrayList<>();
+        return result;
     }
 
     private static List<String> getUrlsFromItemGroup(WebDriver driver) {
@@ -205,15 +209,6 @@ public class SileniumUtil {
     }
 
     private static List<String> browseOptions(WebDriver driver, List<Integer> chooseIndexes,  List<String> parts){
-        if (partAvailable(driver)){
-            parts.add(getPartNo(driver));
-            return parts;
-        }
-        if (vehicleSelected(driver)){
-            if (!resetCar(driver)){
-                return new ArrayList<>();
-            }
-        }
         setOptionsByIndexes(driver, chooseIndexes);
         if (partAvailable(driver)){
             parts.add(getPartNo(driver));
@@ -263,6 +258,7 @@ public class SileniumUtil {
         WebElement partEl = null;
         try {
             partEl = driver.findElement(By.className("product-part-number"));
+            logger.info("got part no " + partEl.getText());
             return partEl.getText();
         }
         catch (NoSuchElementException e){
@@ -282,6 +278,11 @@ public class SileniumUtil {
     }
 
     private static void setOptionsByIndexes(WebDriver driver, List<Integer> chooseIndexes) {
+        if (vehicleSelected(driver)){
+            if (!resetCar(driver)){
+                return;
+            }
+        }
        if (!setFirstIndex(driver, chooseIndexes.get(0))){
            return;
        }
@@ -363,7 +364,7 @@ public class SileniumUtil {
             try {
                 new FluentWait<>(driver)
                         .withTimeout(Duration.ofSeconds(180))
-                        .pollingEvery(Duration.ofMillis(100))
+                        .pollingEvery(Duration.ofMillis(2))
                         .ignoring(WebDriverException.class)
                         .until(ExpectedConditions.or(
                                 ExpectedConditions.presenceOfElementLocated(By.className("product-part-number")),
