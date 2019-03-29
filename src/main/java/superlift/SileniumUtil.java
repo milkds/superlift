@@ -27,7 +27,7 @@ public class SileniumUtil {
         System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
       //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
       //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "212.83.162.199:54321"); //very slow
-        ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "145.253.253.52:8080"); //for tests
+        ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
 
         options.addArguments("--start-maximized");
         WebDriver driver = new ChromeDriver(options);
@@ -288,7 +288,7 @@ public class SileniumUtil {
         int size = chooseIndexes.size();
         if (size>1){
             for (int i = 1; i < size ; i++) {
-                //we make sure this element exists. Otherwie we can't get there
+                //we make sure this element exists. Otherwise we can't get there
                 WebElement selectBoxEl = driver.findElement(By.cssSelector("span[class='selectbox   default-selected expanded']"));
                 List<WebElement> options = selectBoxEl.findElements(By.className("selectbox-option"));
                 int opSize = options.size();
