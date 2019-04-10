@@ -87,10 +87,10 @@ public class JsoupParser {
     }
 
     private void setProxies() {
-        System.setProperty("http.proxyHost", "24.225.1.149");
-        System.setProperty("http.proxyPort", "8080");
-        System.setProperty("https.proxyHost", "24.225.1.149");
-        System.setProperty("https.proxyPort", "8080");
+        System.setProperty("http.proxyHost", "217.69.10.117");
+        System.setProperty("http.proxyPort", "3128");
+        System.setProperty("https.proxyHost", "217.69.10.117");
+        System.setProperty("https.proxyPort", "3128");
     }
 
     public String getItemUrlForSil(String hmlItemUrl) {

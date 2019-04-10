@@ -27,10 +27,10 @@ public class SileniumUtil {
         System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
         //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
         //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "212.83.162.199:54321"); //very slow
-        // ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
-        ChromeOptions options = new ChromeOptions(); //for tests
+         ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
+       // ChromeOptions options = new ChromeOptions(); //for tests
         //options.addArguments("--proxy-server=http://" + "217.69.10.117:3128");
-        options.addArguments("--user-data-dir=C:\\Users\\Grisha\\AppData\\Local\\Google\\Chrome\\User Data\\");
+      //  options.addArguments("--user-data-dir=C:\\Users\\Grisha\\AppData\\Local\\Google\\Chrome\\User Data\\");
 
         options.addArguments("--start-maximized");
         WebDriver driver = new ChromeDriver(options);
@@ -58,10 +58,10 @@ public class SileniumUtil {
                 .until(ExpectedConditions.presenceOfElementLocated(by));
     }
     public static boolean hasConnection(){
-        System.setProperty("http.proxyHost", "24.225.1.149");
-        System.setProperty("http.proxyPort", "8080");
-        System.setProperty("https.proxyHost", "24.225.1.149");
-        System.setProperty("https.proxyPort", "8080");
+        System.setProperty("http.proxyHost", "217.69.10.117");
+        System.setProperty("http.proxyPort", "3128");
+        System.setProperty("https.proxyHost", "217.69.10.117");
+        System.setProperty("https.proxyPort", "3128");
         URL url= null;
         try {
             url = new URL(SUPERLIFT_URL);
@@ -200,7 +200,7 @@ public class SileniumUtil {
         for (int i = 1; i < opSize ; i++) {
             List<Integer> chooseIndexes = new ArrayList<>();
             chooseIndexes.add(i);
-            parts.addAll(browseOptions(driver, chooseIndexes, new ArrayList<>()));
+            parts.addAll(browseOptions(driver, chooseIndexes, new ArrayList<>(), driver.getCurrentUrl()));
         }
 
         parts.forEach(part-> logger.debug("part: " + part));
@@ -208,10 +208,24 @@ public class SileniumUtil {
         return new ArrayList<>();
     }
 
-    private static List<String> browseOptions(WebDriver driver, List<Integer> chooseIndexes,  List<String> parts){
+    private static List<String> browseOptions(WebDriver driver, List<Integer> chooseIndexes,  List<String> parts, String url){
+        if (partAvailable(driver)){
+            parts.add(getPartNo(driver));
+            return parts;
+        }
+        if (vehicleSelected(driver)){
+            if (!resetCar(driver)){
+                return new ArrayList<>();
+            }
+        }
         setOptionsByIndexes(driver, chooseIndexes);
         if (partAvailable(driver)){
             parts.add(getPartNo(driver));
+            try {
+                openItemUrl(driver, url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return parts;
         }
         WebElement activeSelectEl = null;
@@ -236,7 +250,7 @@ public class SileniumUtil {
         for (int i = 1; i < size; i++) {
             List<Integer> newChooses = new ArrayList<>(chooseIndexes);
             newChooses.add(i);
-            parts.addAll(browseOptions(driver, newChooses, new ArrayList<>()));
+            parts.addAll(browseOptions(driver, newChooses, new ArrayList<>(), url));
         }
 
         return parts;
@@ -278,11 +292,7 @@ public class SileniumUtil {
     }
 
     private static void setOptionsByIndexes(WebDriver driver, List<Integer> chooseIndexes) {
-        if (vehicleSelected(driver)){
-            if (!resetCar(driver)){
-                return;
-            }
-        }
+
        if (!setFirstIndex(driver, chooseIndexes.get(0))){
            return;
        }

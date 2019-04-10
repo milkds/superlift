@@ -2,16 +2,15 @@ package superlift.checkers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import superlift.ItemBuilder;
 import superlift.SileniumUtil;
 import superlift.Statistics;
-import org.openqa.selenium.WebDriver;
 import superlift.SuperliftDAO;
 import superlift.entities.ItemGroup;
 import superlift.entities.SuperLiftItem;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,24 @@ public abstract class SubCatChecker {
             driver.get(subCatLink);
          //   By waitBy = By.cssSelector("span[id^='category-sort-select']");
             By waitBy = By.className("price-bar");
-            SileniumUtil.waitForElement(waitBy, driver);
+            int attempts = 0;
+           while (true){
+               try {
+                   SileniumUtil.waitForElement(waitBy, driver);
+                   break;
+               }
+               catch (NoSuchElementException|TimeoutException e){
+                   if (SileniumUtil.hasConnection()){
+                       driver.get(subCatLink);
+                       attempts++;
+                       if (attempts==5){
+                           logger.error("No Price element for category " + subCatLink);
+                           driver.get(subCatLink);
+                           attempts=0;
+                       }
+                   }
+               }
+           }
             String subCatName = driver.findElement(By.className("active")).getText();
             List<String> linksWeb = getLinksFromWeb(driver);
             List<String> linksDB = SuperliftDAO.getItemsBySubcategory(subCatName);
@@ -59,7 +75,16 @@ public abstract class SubCatChecker {
             //switching to base page, to avoid staleElementException
             driver.get("https://www.superlift.com/");
             waitBy = By.id("body");
-            SileniumUtil.waitForElement(waitBy, driver);
+            while (true){
+                try {
+                    SileniumUtil.waitForElement(waitBy, driver);
+                    break;
+                }
+                catch (TimeoutException e){
+                   logger.error("waiting for category to load");
+                    driver.get("https://www.superlift.com/");
+            }
+            }
         }
     }
 

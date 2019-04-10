@@ -2,11 +2,8 @@ package superlift.checkers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.*;
 import superlift.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +67,7 @@ public class DropdownChecker extends SubCatChecker {
                 SileniumUtil.waitForElement(openCatBy, driver);
                 break;
             }
-            catch(NoSuchElementException e){
+            catch(NoSuchElementException|TimeoutException e){
                 attempts++;
                 if (attempts==10){
                     logger.error("could not open category: " + getCategoryID()+". Check site code.");

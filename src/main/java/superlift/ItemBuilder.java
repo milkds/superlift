@@ -76,7 +76,12 @@ public class ItemBuilder {
             return "";
         }
 
-        return title.substring(0, title.indexOf("\""));
+        String lift = title.substring(0, title.indexOf("\""));
+        if (lift.contains(" ")){
+            lift = lift.substring(lift.lastIndexOf(" ")+1);
+        }
+
+        return lift;
     }
 
     private static String getPosition(String title) {

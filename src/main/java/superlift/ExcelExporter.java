@@ -185,6 +185,10 @@ public class ExcelExporter {
         cell = row.createCell(27);
         cell.setCellType(CellType.STRING);
         cell.setCellValue("LIFT");
+
+        cell = row.createCell(28);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("YEAR_STRING");
     }
 
     private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
@@ -370,6 +374,31 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue(model);
 
+        cell = row.createCell(28);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(getYearStr(fit));
+
+    }
+
+    private static String getYearStr(Fitment fit) {
+        int start = fit.getYearStart();
+        int finish = fit.getYearFinish();
+        if (finish-start<0){
+            return "";
+        }
+        if (finish==0||start==0){
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = start; i < finish; i++) {
+            sb.append(i);
+            sb.append("|");
+        }
+        int length = sb.length();
+        if (length>4){
+            sb.setLength(length-1);
+        }
+        return sb.toString();
     }
 
     private static String getShortFitDataStr(SuperLiftItem item) {

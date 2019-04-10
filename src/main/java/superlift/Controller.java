@@ -17,24 +17,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Controller {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-      TestClass.testPartNoGetter();
+    //  TestClass.testPartNoGetter();
      //TestClass.testItemGroup();
       //  TestClass.testExcel();
        // TestClass.setNotAvailable();
-       // new Controller().checkSite();
+        new Controller().checkSite();
      //  TestClass.testDataSave();
 
     }
 
     public void checkSite(){
-       // DBSaver.backupDB();
+        DBSaver.backupDB();
         Statistics statistics = new Statistics();
         ParseLauncher.launchParse(statistics);
-        List<String> urlsFromNewItemGroups = getUrlsFromNewItemGroups(statistics);
+       // List<String> urlsFromNewItemGroups = getUrlsFromNewItemGroups(statistics);
         List<String> webItemUrls = getWebItemUrls();
-        if (urlsFromNewItemGroups.size()!=0){
+        /*if (urlsFromNewItemGroups.size()!=0){
             webItemUrls.addAll(urlsFromNewItemGroups);
-        }
+        }*/
         List<String> dbItemUrls = SuperliftDAO.getAllItemUrls();
         if (changesDetected(webItemUrls, dbItemUrls)){
             WebDriver driver = SileniumUtil.initDriver();
