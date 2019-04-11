@@ -19,9 +19,9 @@ public class Controller {
     public static void main(String[] args) throws IOException, InterruptedException {
     //  TestClass.testPartNoGetter();
      //TestClass.testItemGroup();
-      //  TestClass.testExcel();
+        TestClass.testExcel();
        // TestClass.setNotAvailable();
-        new Controller().checkSite();
+       // new Controller().checkSite();
      //  TestClass.testDataSave();
 
     }

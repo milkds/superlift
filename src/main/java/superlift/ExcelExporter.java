@@ -189,6 +189,10 @@ public class ExcelExporter {
         cell = row.createCell(28);
         cell.setCellType(CellType.STRING);
         cell.setCellValue("YEAR_STRING");
+
+        cell = row.createCell(29);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue("LIFT_STRING");
     }
 
     private static Integer setCells(SuperLiftItem item, Sheet sheet, Integer counter, Session session) {
@@ -263,6 +267,10 @@ public class ExcelExporter {
         cell.setCellType(CellType.STRING);
         cell.setCellValue(item.getLift());
 
+        cell = row.createCell(29);
+        cell.setCellType(CellType.STRING);
+        cell.setCellValue(getLiftString(item));
+
         int size = item.getWheelData().size();
         int wheelDataCounter = 0;
         if (size>0){
@@ -278,6 +286,40 @@ public class ExcelExporter {
         }
 
         return counter;
+    }
+
+    private static String getLiftString(SuperLiftItem item) {
+        String lift = item.getLift();
+        if (lift==null||lift.length()==0){
+            return "";
+        }
+        lift = lift.replaceAll(",",  ".");
+        String[] liftArray = new String[2];
+        if (lift.contains("-")){
+            liftArray = lift.split("-");
+        }
+        else {
+            return lift;
+        }
+
+        double liftStart = 0;
+        double liftFinish = 0;
+        try {
+            liftStart = Double.parseDouble(liftArray[0]);
+            liftFinish = Double.parseDouble(liftArray[1]);
+        }
+        catch (NumberFormatException e){
+            return "ILLEGAL_LIFT_FORMAT";
+        }
+        StringBuilder sb = new StringBuilder(liftStart+"");
+        double currentStep = liftStart;
+        while (currentStep<liftFinish){
+            sb.append("|");
+            currentStep+=0.5;
+            sb.append(currentStep);
+        }
+
+        return sb.toString();
     }
 
     private static int setWheelInfo(SuperLiftItem item, int wheelDataCounter, Sheet sheet) {

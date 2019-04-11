@@ -32,7 +32,7 @@ public class ItemBuilder {
         String installInfo = getInstallInfo(driver, item);
         String category = getCategory(title);
         String position = getPosition(title);
-        String lift = getLift(title);
+        String lift = getLift(title, category);
 
         item.setTitle(title);
         item.setWtf(wtf);
@@ -71,7 +71,10 @@ public class ItemBuilder {
         return item;
     }
 
-    private static String getLift(String title) {
+    private static String getLift(String title, String category) {
+        if (category.equals("Fender Flares")){
+            return "";
+        }
         if (!title.contains("\"")){
             return "";
         }
@@ -80,6 +83,8 @@ public class ItemBuilder {
         if (lift.contains(" ")){
             lift = lift.substring(lift.lastIndexOf(" ")+1);
         }
+
+        lift = lift.replaceAll("w/", "");
 
         return lift;
     }
