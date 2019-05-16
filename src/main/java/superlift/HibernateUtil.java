@@ -23,7 +23,11 @@ public class HibernateUtil {
 
                 Map<String, String> settings = new HashMap<>();
                 settings.put("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
-                settings.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/superlift?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+                settings.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/superlift?useUnicode=true" +
+                        "&useJDBCCompliantTimezoneShift=true" +
+                        "&useLegacyDatetimeCode=false" +
+                        "&serverTimezone=UTC" +
+                        "&useSSL=false");
                 settings.put("hibernate.connection.username", "root");
                 settings.put("hibernate.connection.password", "root");
                 settings.put("hibernate.show_sql", "false");

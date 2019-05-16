@@ -25,9 +25,10 @@ public class SileniumUtil {
 
     public static WebDriver initDriver(){
         System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
-        //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
+     //     ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
         //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "212.83.162.199:54321"); //very slow
-         ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
+       //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
+         ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "96.9.72.241:51738"); //for tests
        // ChromeOptions options = new ChromeOptions(); //for tests
         //options.addArguments("--proxy-server=http://" + "217.69.10.117:3128");
       //  options.addArguments("--user-data-dir=C:\\Users\\Grisha\\AppData\\Local\\Google\\Chrome\\User Data\\");

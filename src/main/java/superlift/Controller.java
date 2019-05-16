@@ -17,13 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Controller {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-    //  TestClass.testPartNoGetter();
-     //TestClass.testItemGroup();
-       // TestClass.testExcel();
-       // TestClass.setNotAvailable();
         new Controller().checkSite();
-     //  TestClass.testDataSave();
-
     }
 
     public void checkSite(){
