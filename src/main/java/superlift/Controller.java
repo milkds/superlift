@@ -21,7 +21,7 @@ public class Controller {
     }
 
     public void checkSite(){
-        DBSaver.backupDB();
+       // DBSaver.backupDB();
         Statistics statistics = new Statistics();
         ParseLauncher.launchParse(statistics);
        // List<String> urlsFromNewItemGroups = getUrlsFromNewItemGroups(statistics);

@@ -87,9 +87,9 @@ public class JsoupParser {
     }
 
     private void setProxies() {
-        System.setProperty("http.proxyHost", "217.69.10.117");
+        System.setProperty("http.proxyHost", "164.68.105.235");
         System.setProperty("http.proxyPort", "3128");
-        System.setProperty("https.proxyHost", "217.69.10.117");
+        System.setProperty("https.proxyHost", "164.68.105.235");
         System.setProperty("https.proxyPort", "3128");
     }
 

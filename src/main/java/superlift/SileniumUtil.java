@@ -28,7 +28,8 @@ public class SileniumUtil {
      //     ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "24.225.1.149:8080"); //old
         //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "212.83.162.199:54321"); //very slow
        //  ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "217.69.10.117:3128"); //for tests
-         ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "96.9.72.241:51738"); //for tests
+         ChromeOptions options = new ChromeOptions().addArguments("--proxy-server=http://" + "164.68.105.235:3128"); //for tests
+        //36.111.140.6:8080
        // ChromeOptions options = new ChromeOptions(); //for tests
         //options.addArguments("--proxy-server=http://" + "217.69.10.117:3128");
       //  options.addArguments("--user-data-dir=C:\\Users\\Grisha\\AppData\\Local\\Google\\Chrome\\User Data\\");
@@ -51,17 +52,11 @@ public class SileniumUtil {
 
         return driver;
     }
-    public static WebElement waitForElement(By by, WebDriver driver) {
-        return  new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(60))
-                .pollingEvery(Duration.ofMillis(2))
-                .ignoring(WebDriverException.class)
-                .until(ExpectedConditions.presenceOfElementLocated(by));
-    }
+
     public static boolean hasConnection(){
-        System.setProperty("http.proxyHost", "217.69.10.117");
+        System.setProperty("http.proxyHost", "164.68.105.235");
         System.setProperty("http.proxyPort", "3128");
-        System.setProperty("https.proxyHost", "217.69.10.117");
+        System.setProperty("https.proxyHost", "164.68.105.235");
         System.setProperty("https.proxyPort", "3128");
         URL url= null;
         try {
@@ -75,6 +70,14 @@ public class SileniumUtil {
 
         return true;
     }
+    public static WebElement waitForElement(By by, WebDriver driver) {
+        return  new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(60))
+                .pollingEvery(Duration.ofMillis(2))
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
     public static void sleepForTimeout(int ms){
         try {
             Thread.sleep(ms);
