@@ -1,5 +1,7 @@
 package superlift;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,6 +15,7 @@ import java.util.List;
 public class JsoupParser {
     private static final String SUPERLIFT_URL = "http://superlift.com/";
     private static final String SITEMAP = "http://superlift.com/product_detail_pages_sitemap.xml";
+    private static final Logger logger = LogManager.getLogger(JsoupParser.class.getName());
 
     public BigDecimal getNewPrice(String itemLink) {
         setProxies();
@@ -73,9 +76,11 @@ public class JsoupParser {
     }
 
     private Document getPage(String xmlItemUrl) {
+        logger.info("getting page");
         Document doc = null;
         while (true){
             try {
+                logger.info("connecting.....");
                 doc = Jsoup.connect(xmlItemUrl).timeout(20 * 1000).userAgent("Mozilla/5.0").get();
                 if (doc!=null){
                     break;

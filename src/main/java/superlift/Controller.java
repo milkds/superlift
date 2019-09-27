@@ -17,20 +17,25 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Controller {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new Controller().checkSite();
+        //new Controller().checkSite();
+        List<String> webItemUrls = new Controller().getWebItemUrls();
+        System.out.println(webItemUrls.size());
     }
 
     public void checkSite(){
-       // DBSaver.backupDB();
+        DBSaver.backupDB();
         Statistics statistics = new Statistics();
         ParseLauncher.launchParse(statistics);
        // List<String> urlsFromNewItemGroups = getUrlsFromNewItemGroups(statistics);
         List<String> webItemUrls = getWebItemUrls();
+        System.out.println(webItemUrls.size());
+        System.out.println();
         /*if (urlsFromNewItemGroups.size()!=0){
             webItemUrls.addAll(urlsFromNewItemGroups);
         }*/
         List<String> dbItemUrls = SuperliftDAO.getAllItemUrls();
         if (changesDetected(webItemUrls, dbItemUrls)){
+            System.out.println("changes detected");
             WebDriver driver = SileniumUtil.initDriver();
             deleteItems(webItemUrls, dbItemUrls, statistics);
             addNewItems(webItemUrls, dbItemUrls, statistics, driver);
