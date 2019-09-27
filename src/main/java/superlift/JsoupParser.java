@@ -82,20 +82,24 @@ public class JsoupParser {
             try {
                 logger.info("connecting.....");
                 doc = Jsoup.connect(xmlItemUrl).timeout(20 * 1000).userAgent("Mozilla/5.0").get();
+
                 if (doc!=null){
                     break;
                 }
-            } catch (IOException ignored){
+            } catch (IOException e){
+                e.printStackTrace();
+                System.exit(1);
             }
         }
         return doc;
     }
 
     private void setProxies() {
-        System.setProperty("http.proxyHost", "164.68.105.235");
-        System.setProperty("http.proxyPort", "3128");
-        System.setProperty("https.proxyHost", "164.68.105.235");
-        System.setProperty("https.proxyPort", "3128");
+        System.setProperty("http.proxyHost", "178.128.233.119");
+        System.setProperty("http.proxyPort", "8080");
+        System.setProperty("https.proxyHost", "178.128.233.119");
+        System.setProperty("https.proxyPort", "8080");
+        logger.info("proxies set");
     }
 
     public String getItemUrlForSil(String hmlItemUrl) {
